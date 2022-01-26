@@ -2,7 +2,7 @@ async function infoFeaturesFASE1(e){
 
     //  escribir acceso
 
-    urlA = new URL("http://"+serverPath+"/opg/write_data_user");
+    urlA = new URL(window.location.protocol+'//'+window.location.host+"/opg/write_data_user");
     const params = {accion:"info_features_revision", latlng:e.latlng, lat:e.latlng.lat, lng:e.latlng.lng, x:x=e.latlng.utm().x, y:y=e.latlng.utm().y};
         Object.keys(params).forEach(key => urlA.searchParams.append(key, params[key]));
         const dataRequest = {
