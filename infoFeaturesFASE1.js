@@ -2,8 +2,8 @@ async function infoFeaturesFASE1(e){
 
     //  escribir acceso
 
-    urlA = new URL(window.location.protocol+'//'+window.location.host+"/opg/write_data_user");
-    const params = {accion:"info_features_revision", latlng:e.latlng, lat:e.latlng.lat, lng:e.latlng.lng, x:x=e.latlng.utm().x, y:y=e.latlng.utm().y};
+    urlA = new URL(window.location.protocol+'//'+window.location.host+"/opg/write_data_user_cross");
+    const params = {server:protocol_server,accion:"info_features_revision", latlng:e.latlng, lat:e.latlng.lat, lng:e.latlng.lng, x:x=e.latlng.utm().x, y:y=e.latlng.utm().y};
         Object.keys(params).forEach(key => urlA.searchParams.append(key, params[key]));
         const dataRequest = {
             method: 'GET'
@@ -19,7 +19,7 @@ async function infoFeaturesFASE1(e){
     var y=e.latlng.utm().y
     console.log(x+","+y);
           
-    var arrayTablas = new Array(27); 
+    var arrayTablas = new Array(29); 
     arrayTablas[0]=["parcela_su_ru_calles"];
     arrayTablas[1]=["calific_zonas"];
     arrayTablas[2]=["suelo_rustico"];
@@ -36,21 +36,24 @@ async function infoFeaturesFASE1(e){
     arrayTablas[13]=["espacios_libres_privados"];
     arrayTablas[14]=["catalogos"];
     arrayTablas[15]=["catalogos_molinos"];
-    arrayTablas[16]=["preservacion"];
-    arrayTablas[17]=["actuaciones_transformacion_urbana"];
-    arrayTablas[18]=["area_planeamiento_incorporado"];
-    arrayTablas[19]=["zona_regulacion_especifica"];
+    arrayTablas[16]=["cic"];
+    arrayTablas[17]=["preservacion"];
+    arrayTablas[18]=["actuaciones_transformacion_urbana"];
+    arrayTablas[19]=["area_planeamiento_incorporado"];
+    arrayTablas[20]=["zona_regulacion_especifica"];
     //arrayTablas[20]=["pb_pla_especial"];
     //arrayTablas[21]=["pbx_pla_especial_ri"];
     //arrayTablas[22]=["pc_pla_parcial"];
     //arrayTablas[23]=["pe_estudi_detall"];
-    arrayTablas[20]=["suelo_urbanizable"];
-    arrayTablas[21]=["nucleos_tradicionales"];
-    arrayTablas[22]=["uso_turistico"];
-    arrayTablas[23]=["parque_agrario"];
-    arrayTablas[24]=["suelo_urbano"];
-    arrayTablas[25]=["apt_rustico"];
-    arrayTablas[26]=["areas_prevencion_riesgos"];
+    arrayTablas[21]=["suelo_urbanizable"];
+    arrayTablas[22]=["ap_pgr"];
+    arrayTablas[23]=["nucleos_tradicionales"];
+    arrayTablas[24]=["uso_turistico"];
+    arrayTablas[25]=["parque_agrario"];
+    arrayTablas[26]=["suelo_urbano"];
+    arrayTablas[27]=["apt_rustico"];
+    arrayTablas[28]=["areas_prevencion_riesgos"];
+    
 
     var num_exp=0;
 
@@ -82,7 +85,18 @@ async function infoFeaturesFASE1(e){
     arrayTablas[25]=["campos_golf"];*/
 
    
+    // probar findTables
     
+    let urlF = new URL(window.location.protocol+'//'+window.location.host+"/opg/findLayers");
+    const paramsF = {server:window.location.protocol+'//'+window.location.host,arrayTables: arrayTablas, x: x, y: y};
+    Object.keys(paramsF).forEach(keyF => urlF.searchParams.append(keyF, paramsF[keyF]));
+    const dataRequestF = {
+        method: 'GET'
+    };
+    var responseF = await fetch(urlF,dataRequestF); 
+    var jsonTables = await responseF.json();
+    console.log(jsonTables)
+    //
    
     var tabla;
 
@@ -91,14 +105,14 @@ async function infoFeaturesFASE1(e){
     var htmlr="";
     var html="";
     // function servicio(){
-    for(var p=0;p<arrayTablas.length;p++){
+    for(var p=0;p<jsonTables.length;p++){
 
-         tabla=arrayTablas[p]; 
+         tabla=jsonTables[p]; 
          console.log("paix"+tabla);
 
        // let url = new URL("http://"+serverPath+"/infoXY");
-        let url = new URL("http://"+serverPath+"/opg/infoXY_FASE1");
-        const params = {tabla: tabla, x: x, y: y};
+        let url = new URL(window.location.protocol+'//'+window.location.host+"/opg/infoXY_FASE1_cross");
+        const params = {server:protocol_server,tabla: tabla, x: x, y: y};
         Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
         const dataRequest = {
             method: 'GET'
@@ -163,7 +177,7 @@ async function infoFeaturesFASE1(e){
                 if(tabla=="sistema_local_espacios_libres"){
 
                     htmlr=htmlr+`<TABLE  style='margin-top: 0px;margin-bottom: 0px;margin-right: 0px;margin-left: 0px;padding:0px;font-size:9px;font-family:Arial;color:#000000;width:100%;height:50px'  BORDER=0  bgcolor="#cfd7e7" BORDERCOLOR="grey" CELLPADDING=3 CELLSPACING=1>
-                                    <tr  align="center"  style='background-color:rgb(190,207,80,0.7);padding:3px;font-size:8.5pt;font-family:Arial Black;color:#4d4d4d;height:22px'>
+                                    <tr  align="center"  style='background-color:rgb(128,219,123,1);padding:3px;font-size:8.5pt;font-family:Arial Black;color:#4d4d4d;height:22px'>
                                         <td colspan="2"> ESPAI LLIURE PÚBLIC</td>                   
                                     </tr >
                                     <tr align="center"  style='background-color:white;padding:3px;font-size:7.7pt;font-family:Arial Black;color:#660000;height:22px'>
@@ -206,7 +220,7 @@ async function infoFeaturesFASE1(e){
                 if(tabla=="sistema_local_comunicaciones"){
 
                     htmlr=htmlr+`<TABLE  style='margin-top: 0px;margin-bottom: 0px;margin-right: 0px;margin-left: 0px;padding:0px;font-size:9px;font-family:Arial;color:#000000;width:100%;height:50px'  BORDER=0  bgcolor="#cfd7e7" BORDERCOLOR="grey" CELLPADDING=3 CELLSPACING=1>
-                                    <tr  align="center"  style='background-color:rgb(121,152,246,0.2);padding:3px;font-size:8.5pt;font-family:Arial Black;color:#4d4d4d;height:22px'>
+                                    <tr  align="center"  style='background-color:rgb(230,230,230,1);padding:3px;font-size:8.5pt;font-family:Arial Black;color:#4d4d4d;height:22px'>
                                         <td colspan="2">COMUNICACIONS</td>                   
                                     </tr >
                                     <tr align="center"  style='background-color:white;padding:3px;font-size:7.7pt;font-family:Arial Black;color:#660000;height:22px'>
@@ -244,7 +258,7 @@ async function infoFeaturesFASE1(e){
                 if(tabla=="sistema_local_infraestructuras"){
 
                     htmlr=htmlr+`<TABLE  style='margin-top: 0px;margin-bottom: 0px;margin-right: 0px;margin-left: 0px;padding:0px;font-size:9px;font-family:Arial;color:#000000;width:100%;height:50px'  BORDER=0  bgcolor="#cfd7e7" BORDERCOLOR="grey" CELLPADDING=3 CELLSPACING=1>
-                                    <tr  align="center"  style='background-color:rgb(121,123,137,0.4);padding:3px;font-size:8.5pt;font-family:Arial Black;color:#4d4d4d;height:22px'>
+                                    <tr  align="center"  style='background-color:rgb(230,230,230,1);padding:3px;font-size:8.5pt;font-family:Arial Black;color:#4d4d4d;height:22px'>
                                         <td colspan="2">INFRAESTRUCTURES</td>                   
                                     </tr >
                                     <tr align="center"  style='background-color:white;padding:3px;font-size:7.7pt;font-family:Arial Black;color:#660000;height:22px'>
@@ -282,7 +296,7 @@ async function infoFeaturesFASE1(e){
                 if(tabla=="sistema_local_servicios_urbanos"){
 
                     htmlr=htmlr+`<TABLE  style='margin-top: 0px;margin-bottom: 0px;margin-right: 0px;margin-left: 0px;padding:0px;font-size:9px;font-family:Arial;color:#000000;width:100%;height:50px'  BORDER=0  bgcolor="#cfd7e7" BORDERCOLOR="grey" CELLPADDING=3 CELLSPACING=1>
-                                    <tr  align="center"  style='background-color:rgb(121,123,137,0.4);padding:3px;font-size:8.5pt;font-family:Arial Black;color:#4d4d4d;height:22px'>
+                                    <tr  align="center"  style='background-color:rgb(230,230,230,1);padding:3px;font-size:8.5pt;font-family:Arial Black;color:#4d4d4d;height:22px'>
                                         <td colspan="2">SERVEIS URBANS</td>                   
                                     </tr >
                                     <tr align="center"  style='background-color:white;padding:3px;font-size:7.7pt;font-family:Arial Black;color:#660000;height:22px'>
@@ -329,7 +343,7 @@ async function infoFeaturesFASE1(e){
                         
 
                         htmlr=htmlr+`<TABLE  style='margin-top: 0px;margin-bottom: 0px;margin-right: 0px;margin-left: 0px;padding:0px;font-size:9px;font-family:Arial;color:#000000;width:100%;height:50px'  BORDER=0  bgcolor="#cfd7e7" BORDERCOLOR="grey" CELLPADDING=3 CELLSPACING=1>
-                                    <tr  align="center"  style='background-color:rgb(121,152,246,0.2);padding:3px;font-size:8.5pt;font-family:Arial Black;color:#4d4d4d;height:22px'>
+                                    <tr  align="center"  style='background-color:rgb(169,203,215,1);padding:3px;font-size:8.5pt;font-family:Arial Black;color:#4d4d4d;height:22px'>
                                         <td colspan="2">${tipo_sg}</td>                   
                                     </tr >
                                     <tr align="center"  style='background-color:white;padding:3px;font-size:7.7pt;font-family:Arial Black;color:#660000;height:22px'>
@@ -369,7 +383,7 @@ async function infoFeaturesFASE1(e){
                 if(tabla=="sistema_general_comunicaciones"){
 
                     htmlr=htmlr+`<TABLE  style='margin-top: 0x;margin-bottom: 0px;margin-right: 0px;margin-left: 0px;padding:0px;font-size:9px;font-family:Arial;color:#000000;width:100%;height:50px'  BORDER=0  bgcolor="#cfd7e7" BORDERCOLOR="grey" CELLPADDING=3 CELLSPACING=1>
-                                    <tr  align="center"  style='background-color:rgb(121,123,137,0.4);padding:3px;font-size:8.5pt;font-family:Arial Black;color:#4d4d4d;height:22px'>
+                                    <tr  align="center"  style='background-color:rgb(230,230,230,1);padding:3px;font-size:8.5pt;font-family:Arial Black;color:#4d4d4d;height:22px'>
                                         <td colspan="2"> COMUNICACIONS</td>                   
                                     </tr >
                                     <tr align="center"  style='background-color:white;padding:3px;font-size:7.7pt;font-family:Arial Black;color:#660000;height:22px'>
@@ -407,7 +421,7 @@ async function infoFeaturesFASE1(e){
                 if(tabla=="sistema_general_infraestructuras"){
 
                     htmlr=htmlr+`<TABLE  style='margin-top: 0x;margin-bottom: 0px;margin-right: 0px;margin-left: 0px;padding:0px;font-size:9px;font-family:Arial;color:#000000;width:100%;height:50px'  BORDER=0  bgcolor="#cfd7e7" BORDERCOLOR="grey" CELLPADDING=3 CELLSPACING=1>
-                                    <tr  align="center"  style='background-color:rgb(121,123,137,0.4);padding:3px;font-size:8.5pt;font-family:Arial Black;color:#4d4d4d;height:22px'>
+                                    <tr  align="center"  style='background-color:rgb(230,230,230,1);padding:3px;font-size:8.5pt;font-family:Arial Black;color:#4d4d4d;height:22px'>
                                         <td colspan="2">INFRAESTRUCTURES</td>                   
                                     </tr >
                                     <tr align="center"  style='background-color:white;padding:3px;font-size:7.7pt;font-family:Arial Black;color:#660000;height:22px'>
@@ -445,7 +459,7 @@ async function infoFeaturesFASE1(e){
                 if(tabla=="sistema_general_servicios_urbanos"){
 
                     htmlr=htmlr+`<TABLE  style='margin-top: 0x;margin-bottom: 0px;margin-right: 0px;margin-left: 0px;padding:0px;font-size:9px;font-family:Arial;color:#000000;width:100%;height:50px'  BORDER=0  bgcolor="#cfd7e7" BORDERCOLOR="grey" CELLPADDING=3 CELLSPACING=1>
-                                    <tr  align="center"  style='background-color:rgb(121,123,137,0.4);padding:3px;font-size:8.5pt;font-family:Arial Black;color:#4d4d4d;height:22px'>
+                                    <tr  align="center"  style='background-color:rgb(230,230,230,1);padding:3px;font-size:8.5pt;font-family:Arial Black;color:#4d4d4d;height:22px'>
                                         <td colspan="2">SERVEIS URBANS</td>                   
                                     </tr >
                                     <tr align="center"  style='background-color:white;padding:3px;font-size:7.7pt;font-family:Arial Black;color:#660000;height:22px'>
@@ -482,7 +496,7 @@ async function infoFeaturesFASE1(e){
 
                 if(tabla=="sistema_general_espacios_libres"){
                     htmlr=htmlr+`<TABLE style='margin-top: 0px;margin-bottom: 0px;margin-right: 0px;margin-left: 0px;padding:0px;font-size:9px;font-family:Arial;color:#000000;width:100%;height:50px'  BORDER=0  bgcolor="#cfd7e7" BORDERCOLOR="grey" CELLPADDING=3 CELLSPACING=1>
-                                    <tr  align="center"  style='background-color:rgb(190,207,80,0.7);padding:3px;font-size:8.5pt;font-family:Arial Black;color:#4d4d4d;height:22px'>
+                                    <tr  align="center"  style='background-color:rgb(128,219,123,1);padding:3px;font-size:8.5pt;font-family:Arial Black;color:#4d4d4d;height:22px'>
                                         <td colspan="2">ESPAIS LLIURES</td>                   
                                     </tr >
                                     <tr align="center"  style='background-color:white;padding:3px;font-size:7.7pt;font-family:Arial Black;color:#660000;height:22px'>
@@ -557,7 +571,7 @@ async function infoFeaturesFASE1(e){
 
                     for(var r=0;r<geojsonRES.features.length;r++){   
 
-                        ruta="http://vscenegis.hopto.org/images/FICHAS_PLANEAMIENTO/CATALOGOS/"+
+                        ruta=protocol_server+"/images/FICHAS_PLANEAMIENTO/CATALOGOS/"+
                                     geojsonRES.features[r].properties.codigo+".pdf"
 
                         botonFicha=''
@@ -605,8 +619,8 @@ async function infoFeaturesFASE1(e){
 
                     for(var r=0;r<geojsonRES.features.length;r++){   
 
-                        ruta="http://vscenegis.hopto.org/images/FICHAS_PLANEAMIENTO/CATALOGOS/"+
-                        geojsonRES.features[r].properties.codigo+".pdf"
+                        ruta=window.location.protocol+'//'+window.location.host+"/images/FICHAS_PLANEAMIENTO/CATALOGOS/"+
+                                    geojsonRES.features[r].properties.codigo+".pdf"
 
 
                         var area = turf.area(geojsonRES.features[r].geometry);
@@ -629,9 +643,55 @@ async function infoFeaturesFASE1(e){
                                 </tr>
                                 <tr align="center"  style='background-color:white;padding:3px;font-size:8.5pt;font-family:Arial Black;color:#660000;height:22px'>  
                                     <td colspan="2"> 
-                                        <a href="${ruta}" target="_blank" class="ui-button ui-widget ui-corner-all" title="Fitxa aprobada"><i class="fa fa-info-circle"> Fitxa </i></a> 
+                                       <!-- <a href="${ruta}" target="_blank" class="ui-button ui-widget ui-corner-all" title="Fitxa aprobada"><i class="fa fa-info-circle"> Fitxa </i></a> -->
                                       
-                                        <button style="padding:3px;font-size:9pt;font-family:Arial Black" class="ui-button ui-widget ui-corner-all" title="Informació normativa associada" OnClick="normativa_revsion('catalogos_molinos','${geojsonRES.features[r].properties.fid}')"><i class="fa fa-info-circle">Normativa</i></button>
+                                       <!-- <button style="padding:3px;font-size:9pt;font-family:Arial Black" class="ui-button ui-widget ui-corner-all" title="Informació normativa associada" OnClick="normativa_revsion('catalogos_molinos','${geojsonRES.features[r].properties.fid}')"><i class="fa fa-info-circle">Normativa</i></button> -->
+                                    </td>      
+                                </tr>
+                                `;
+                      
+                    }
+                    htmlr=htmlr+`</TABLE><br>`;
+
+                   
+                }
+
+                if(tabla=="cic"){
+
+                    htmlr=htmlr+`<TABLE  style='margin-bottom: 0px;margin-right: 0px;margin-left: 0px;padding:0px;font-size:9px;font-family:Arial;color:#000000;width:100%;height:50px'  BORDER=0  bgcolor="#cfd7e7" BORDERCOLOR="grey" CELLPADDING=3 CELLSPACING=1>
+                                <tr  align="center"  style='background-color:rgb(230,143,230,1);padding:3px;font-size:8.5pt;font-family:Arial Black;color:#4d4d4d;height:22px'>
+                                    <td colspan="2">CATALEGS (JACIMENTS)</td>                   
+                                </tr >`;
+                              
+
+                    for(var r=0;r<geojsonRES.features.length;r++){   
+
+                        ruta=window.location.protocol+'//'+window.location.host+"/images/FICHAS_PLANEAMIENTO/CATALOGOS/"+
+                                    geojsonRES.features[r].properties.codigo+".pdf"
+
+
+                        var area = turf.area(geojsonRES.features[r].geometry);
+                        area=area.toFixed(2)+ " m2";
+
+                        codigo=geojsonRES.features[r].properties.codigo
+
+                        if(r>0) html=html+` <tr style='height:2px'>                 
+                                        </tr>`;
+
+                        htmlr=htmlr+` <tr align="left"  style='background-color:white;padding:3px;font-size:7.7pt;font-family:Arial Black;color:#660000;height:22px'>
+                                    <td><LABEL style='font-size:8pt;font-family:Arial Black;color:BLACK'>NOMBRE</LABEL></td>  
+                                    <td><LABEL style='font-size:8pt;font-family:Arial;color:BLACK'>${geojsonRES.features[r].properties.denominaci}</td>                  
+                                </tr>
+                               
+                                <tr align="left"  style='background-color:white;padding:3px;font-size:7.7pt;font-family:Arial Black;color:#660000;height:22px'>
+                                    <td><LABEL style='font-size:8pt;font-family:Arial Black;color:BLACK'>CODI</LABEL></td>  
+                                    <td><LABEL style='font-size:8pt;font-family:Arial;color:BLACK'>${codigo}</td>                  
+                                </tr>
+                                <tr align="center"  style='background-color:white;padding:3px;font-size:8.5pt;font-family:Arial Black;color:#660000;height:22px'>  
+                                    <td colspan="2"> 
+                                       <!-- <a href="${ruta}" target="_blank" class="ui-button ui-widget ui-corner-all" title="Fitxa aprobada"><i class="fa fa-info-circle"> Fitxa </i></a> -->
+                                      
+                                       <!-- <button style="padding:3px;font-size:9pt;font-family:Arial Black" class="ui-button ui-widget ui-corner-all" title="Informació normativa associada" OnClick="normativa_revsion('catalogos_molinos','${geojsonRES.features[r].properties.fid}')"><i class="fa fa-info-circle">Normativa</i></button> -->
                                     </td>      
                                 </tr>
                                 `;
@@ -703,7 +763,7 @@ async function infoFeaturesFASE1(e){
                             case "ARU":
                             case "ARU-AE":
                               
-                                ruta="http://vscenegis.hopto.org/images/FICHAS_PLANEAMIENTO/ACTUACIONES/ARU/"+
+                                ruta=protocol_server+"/images/FICHAS_PLANEAMIENTO/ACTUACIONES/ARU/"+
                                     geojsonRES.features[r].properties.tipo_tyc+"_"+
                                     geojsonRES.features[r].properties.codigo+".pdf"
 
@@ -712,13 +772,13 @@ async function infoFeaturesFASE1(e){
                                
                                 break;
                             case "ARU-T":
-                                ruta="http://vscenegis.hopto.org/images/FICHAS_PLANEAMIENTO/ACTUACIONES/ARU-T/"+
+                                ruta=protocol_server+"/images/FICHAS_PLANEAMIENTO/ACTUACIONES/ARU-T/"+
                                     geojsonRES.features[r].properties.tipo_tyc+"_"+
                                     geojsonRES.features[r].properties.codigo+".pdf"
                                 tipo="(ARU-T) Actuacions de renovació urbana Transitòries"
                                 break;
                             case "ARI-PE":
-                                ruta="http://vscenegis.hopto.org/images/FICHAS_PLANEAMIENTO/ACTUACIONES/ARI-PE/"+
+                                ruta=protocol_server+"/images/FICHAS_PLANEAMIENTO/ACTUACIONES/ARI-PE/"+
                                     geojsonRES.features[r].properties.tipo_tyc+"_"+
                                     geojsonRES.features[r].properties.codigo+".pdf"
                                 tipo="(ARI-PE) Actuacions de reforma interior"
@@ -726,20 +786,20 @@ async function infoFeaturesFASE1(e){
                             case "AT-IU":
                             case "AT-IU-PE":
                             case "AT-IU-T":
-                                ruta="http://vscenegis.hopto.org/images/FICHAS_PLANEAMIENTO/ACTUACIONES/ARU-T/"+
+                                ruta=protocol_server+"/images/FICHAS_PLANEAMIENTO/ACTUACIONES/ARU-T/"+
                                     geojsonRES.features[r].properties.tipo_tyc+"_"+
                                     geojsonRES.features[r].properties.codigo+".pdf"
                                 tipo="(AT-IU) Actuacions de transformació amb finalitats d’integració urbana i millora ambiental (DT 11 LUIB)"
                                 break;
                             case "AA":
                             case "AA-T":
-                                ruta="http://vscenegis.hopto.org/images/FICHAS_PLANEAMIENTO/ACTUACIONES/AA/"+
+                                ruta=protocol_server+"/images/FICHAS_PLANEAMIENTO/ACTUACIONES/AA/"+
                                     geojsonRES.features[r].properties.tipo_tyc+"_"+
                                     geojsonRES.features[r].properties.codigo+".pdf"
                                 tipo="(AA) Actuacions aïllades en sòl urbà"
                                 break;
                             case "AD":
-                                ruta="http://vscenegis.hopto.org/images/FICHAS_PLANEAMIENTO/ACTUACIONES/AD/"+
+                                ruta=protocol_server+"/images/FICHAS_PLANEAMIENTO/ACTUACIONES/AD/"+
                                     geojsonRES.features[r].properties.tipo_tyc+"_"+
                                     geojsonRES.features[r].properties.codigo+".pdf"
                                 tipo="(AD)  Actuacions de dotació vinculades a increments d’aprofitament"
@@ -777,19 +837,62 @@ async function infoFeaturesFASE1(e){
                     htmlr=htmlr+`</TABLE><BR>`;
                 } 
 
-               
 
-                if(tabla=="suelo_urbanizable"){
+                if(tabla=="ap_pgr"){
 
                     htmlr=htmlr+`<TABLE  style='margin-bottom: 0px;margin-right: 0px;margin-left: 0px;padding:0px;font-size:9px;font-family:Arial;color:#000000;width:100%;height:50px'  BORDER=0  bgcolor="#cfd7e7" BORDERCOLOR="grey" CELLPADDING=3 CELLSPACING=1>
-                                <tr  align="center"  style='background-color:rgb(255,179,102,1);padding:3px;font-size:8.5pt;font-family:Arial Black;color:white;height:22px'>
-                                    <td colspan="2">(SUB) SUELO URBANIZABLE</td>                   
+                                <tr  align="center"  style='background-color:rgb(105,148,209,1);padding:3px;font-size:8.5pt;font-family:Arial Black;color:white;height:22px'>
+                                    <td colspan="2">ÀREES PREFERENTS PER A PROGRAMES DE REGENERACIÓ I REVITALITZACIÓ DE BARRIS </td>                   
                                 </tr >`;
                               
 
                     for(var r=0;r<geojsonRES.features.length;r++){   
 
-                        var ruta="http://vscenegis.hopto.org/images/FICHAS_PLANEAMIENTO/ACTUACIONES/SUB/"+
+
+                        var area = turf.area(geojsonRES.features[r].geometry);
+                        area=area.toFixed(2)+ " m2";
+
+                        codigo=geojsonRES.features[r].properties.codigo
+
+                        if(r>0) html=html+` <tr style='height:2px'>                 
+                                        </tr>`;
+
+                        htmlr=htmlr+` <tr align="left"  style='background-color:white;padding:3px;font-size:7.7pt;font-family:Arial Black;color:#660000;height:22px'>
+                                    <td><LABEL style='font-size:8pt;font-family:Arial Black;color:BLACK'>NOMBRE</LABEL></td>  
+                                    <td><LABEL style='font-size:8pt;font-family:Arial;color:BLACK'>${geojsonRES.features[r].properties.articulo}</td>                  
+                                </tr>
+                               
+                                <tr align="left"  style='background-color:white;padding:3px;font-size:7.7pt;font-family:Arial Black;color:#660000;height:22px'>
+                                    <td><LABEL style='font-size:8pt;font-family:Arial Black;color:BLACK'>CODI</LABEL></td>  
+                                    <td><LABEL style='font-size:8pt;font-family:Arial;color:BLACK'>${codigo}</td>                  
+                                </tr>
+                                <tr align="center"  style='background-color:white;padding:3px;font-size:8.5pt;font-family:Arial Black;color:#660000;height:22px'>  
+                                    <td colspan="2"> 
+                                      
+                                       <!-- <button style="padding:3px;font-size:9pt;font-family:Arial Black" class="ui-button ui-widget ui-corner-all" title="Informació normativa associada" OnClick="normativa_revsion('catalogos_molinos','${geojsonRES.features[r].properties.fid}')"><i class="fa fa-info-circle">Normativa</i></button> -->
+                                    </td>      
+                                </tr>
+                                `;
+                      
+                    }
+                    htmlr=htmlr+`</TABLE><br>`;
+
+                   
+                }
+
+               
+
+                if(tabla=="suelo_urbanizable"){
+
+                    htmlr=htmlr+`<TABLE  style='margin-bottom: 0px;margin-right: 0px;margin-left: 0px;padding:0px;font-size:9px;font-family:Arial;color:#000000;width:100%;height:50px'  BORDER=0  bgcolor="#cfd7e7" BORDERCOLOR="grey" CELLPADDING=3 CELLSPACING=1>
+                                <tr  align="center"  style='background-color:rgb(230,128,77,1);padding:3px;font-size:8.5pt;font-family:Arial Black;color:white;height:22px'>
+                                    <td colspan="2">(SUB) SÒL URBANITZABLE</td>                   
+                                </tr >`;
+                              
+
+                    for(var r=0;r<geojsonRES.features.length;r++){   
+
+                        var ruta=window.location.protocol+'//'+window.location.host+"/images/FICHAS_PLANEAMIENTO/ACTUACIONES/SUB/"+
                                   geojsonRES.features[r].properties.codigo+".pdf"
 
                         var area = turf.area(geojsonRES.features[r].geometry);
@@ -829,14 +932,14 @@ async function infoFeaturesFASE1(e){
                 if(tabla=="area_planeamiento_incorporado"){
 
                     htmlr=htmlr+`<TABLE  style='margin-bottom: 0px;margin-right: 0px;margin-left: 0px;padding:0px;font-size:9px;font-family:Arial;color:#000000;width:100%;height:50px'  BORDER=0  bgcolor="#cfd7e7" BORDERCOLOR="grey" CELLPADDING=3 CELLSPACING=1>
-                                <tr  align="center"  style='background-color:rgb(77,128,77,0.8);padding:3px;font-size:8.5pt;font-family:Arial Black;color:white;height:22px'>
+                                <tr  align="center"  style='background-color:rgb(98,170,98,0.9);padding:3px;font-size:8.5pt;font-family:Arial Black;color:white;height:22px'>
                                     <td colspan="2">(API) AREA PLANEJAMENT INCORPORAT</td>                   
                                 </tr >`;
                               
 
                     for(var r=0;r<geojsonRES.features.length;r++){   
 
-                        var ruta="http://vscenegis.hopto.org/images/planoguia/Images Arxiu/"+
+                        var ruta=window.location.protocol+'//'+window.location.host+"/images/guia_expedientes/Images Arxiu/"+
                                   geojsonRES.features[r].properties.ruta_exp
 
                         var datoRuta=`<td align="center"><a href="${ruta}"  target="_blank" title="Informació del instrument de desenvolupament" style='color:blue;font-family:Arial;font-size:8.5pt'>${geojsonRES.features[r].properties.regulacion}</a></td>`                  
@@ -1000,7 +1103,7 @@ async function infoFeaturesFASE1(e){
                                 descr="Sòl Rústic Protegit"
                                 break;
                             case "ZIP":
-                                back_color="231,170,150,0.75";
+                                back_color="222,248,222,1";
                                 descr="Sòl Rústic Protegit"
                                 break;
                             case "APR":
@@ -1012,11 +1115,11 @@ async function infoFeaturesFASE1(e){
                                 descr="Sòl Rústic Protegit (subjacent)"
                                 break;
                             case "AIA":
-                                back_color="224,219,159,0.75";
+                                back_color="228,224,171,1";
                                 descr="Sòl Rústic Comú"
                                 break;
                             case "AT-H":
-                                back_color="212,185,153,0.75";
+                                back_color="232,232,215,1";
                                 descr="Sòl Rústic Comú"
                                 calificacion=geojsonRES.features[r].properties.categoria;
                                 calif_desc=geojsonRES.features[r].properties.categoria_descripcion;
@@ -1123,29 +1226,31 @@ async function infoFeaturesFASE1(e){
                         switch(geojsonRES.features[r].properties.subcategoria){
 
                             case "APR-IN_G":
+                                back_color="163,219,231,1";
+                                descr="Sòl Rústic Protegit"
+                                break
                             case "APR-IN_T500":
-                                back_color="0,117,33,0.75";
-                                color="white"
+                                back_color="153,193,204,1";        
                                 descr="Sòl Rústic Protegit"
                                 break;
                             case "APR-IF":
-                                back_color="73,105,52,0.75";
-                                color="white"
+                                back_color="232,210,100,1";
+                               
                                 descr="Sòl Rústic Protegit"
                                 break;
                             case "APR-ER":
-                                back_color="151,176,74,0.75";
+                                back_color="211,177,109,1";
                                 descr="Sòl Rústic Protegit"
                                 break;
                             case "APR-ES":
-                                back_color="128,166,108,0.75";
+                                back_color="102,153,153,1";
+                                color="white"
                                 descr="Sòl Rústic Protegit"
                                 break;
                             case "APR-CN":
-                                back_color="231,170,150,0.75";
+                                back_color="179,179,179,1";
                                 descr="Sòl Rústic Protegit"
-                                break;
-                           
+                                break;  
                             default:
                                 back_color="213,180,60,0.5";
                                 break;
@@ -1170,15 +1275,6 @@ async function infoFeaturesFASE1(e){
                             `;
                         }
 
-                        /*if(geojsonRES.features[r].properties.tipo_descr!="-" && geojsonRES.features[r].properties.tipo_descr!=null){
-
-                            htmlr=htmlr+`<tr align="center"  style='background-color:white;padding:3px;font-size:7.7pt;font-family:Arial Black;color:#660000;height:22px'>
-                                       
-                                        <td  colspan="2"><LABEL style='font-size:8pt;font-family:Arial black;color:GREY'>(${geojsonRES.features[r].properties.tipo_descr})</td>                  
-                                    </tr>
-
-                            `;
-                        } */
 
                         htmlr=htmlr+`
                                     <tr align="left"  style='background-color:white;padding:3px;font-size:7.7pt;font-family:Arial Black;color:#660000;height:22px'>
@@ -1273,29 +1369,32 @@ async function infoFeaturesFASE1(e){
                                 break;
                             case "L":
                             case "M":
-                                back_color="148,146,247,0.9";
-                                tipo_zona="SECUNDARIO"
+                                back_color="217,208,233,1";
+                                tipo_zona="INDUSTRIAL"
                                 break;
                             case "S":
+                                back_color="230,204,255,1";
+                                tipo_zona="TERCIARIO (COMERCIAL/ADMINISTRATIU)"
+                                break;
                             case "T":
-                                back_color="114,155,111,0.5";
-                                tipo_zona="TERCIARIO"
+                                back_color="193,217,248,1";
+                                tipo_zona="TURISTIC"
                                 break;
                             case "N":
                             case "R":
                                 back_color="255,230,204,0.9";
                                 tipo_zona="ZONA CENTRO HISTORICO"
                                 break;
-                            case "D-PL":
-                                back_color="255,148,127,0.5";
+                            case "D-Pl":
+                                back_color="249,213,213,1";
                                 tipo_zona="RESIDENCIAL ENTRE MITGERES"
                                 break;
                             case "E-Pl":
-                                back_color="255,181,146,0.5";
+                                back_color="246,231,228,1";
                                 tipo_zona="HABITATGE PLURIFAMILIAR AILLAT"
                                 break;
                             case "I-Pl":
-                                back_color="255,220,91,0.5";
+                                back_color="251,243,191,1";
                                 tipo_zona="HABITATGE UNIFAMILIAR"
                                 break;
                             case "S-Pl":
@@ -1303,11 +1402,11 @@ async function infoFeaturesFASE1(e){
                                 tipo_zona="COMERCIAL I SERVEIS"
                                 break;
                             case "T-Pl":
-                                back_color="41,148,255,0.5";
+                                back_color="193,217,248,1";
                                 tipo_zona="TURISTIC"
                                 break;
                             case "TH-Pl":
-                                back_color="117,181,255,0.5";
+                                back_color="193,217,248,1";
                                 tipo_zona="TURISTIC HOTELER"
                                 break;
                             case "VA-Pl":
@@ -1646,7 +1745,7 @@ async function infoFeaturesFASE1(e){
 
                     
 
-                    map.spin(false);
+                   // map.spin(false);
 
                     htmlr=htmlr+`<TABLE  style='margin-top: 0px;margin-bottom: 0px;margin-right: 0px;margin-left: 0px;padding:0px;font-size:9px;font-family:Arial;color:#000000;width:100%;height:50px'  BORDER=0  bgcolor="#cfd7e7" BORDERCOLOR="grey" CELLPADDING=3 CELLSPACING=1>
                                 <tr  align="center"  style='background-color:rgb(26,77,26,1);padding:3px;font-size:8.5pt;font-family:Arial BLACK;color:white;height:22px'>
@@ -1664,10 +1763,10 @@ async function infoFeaturesFASE1(e){
                         htmlr=htmlr+` 
                                     <tr align="left"  style='background-color:white;padding:3px;font-size:7.7pt;font-family:Arial Black;color:#660000;height:22px'>
                                         <td> 
-                                            <a target="_blank" title="Ir Sede electronica catastro" href="https://www1.sedecatastro.gob.es/cycbieninmueble/OVCListaBienes.aspx?RC1=${geojsonRES.features[r].properties.pcat1}&RC2=${geojsonRES.features[r].properties.pcat2}"><img src="http://${serverPath}/opg/images/sede_catastro1.png"></a>
+                                            <a target="_blank" title="Ir Sede electronica catastro" href="https://www1.sedecatastro.gob.es/cycbieninmueble/OVCListaBienes.aspx?RC1=${geojsonRES.features[r].properties.pcat1}&RC2=${geojsonRES.features[r].properties.pcat2}"><img src="${window.location.protocol}//${window.location.host}/opg/images/sede_catastro1.png"></a>
                                         </td> 
                                         <td> 
-                                            <a target="_blank" title="Ir a Street view" href="${urlG}}"><img src="http://${serverPath}/opg/images/streetview.png"></a>
+                                            <a target="_blank" title="Ir a Street view" href="${urlG}}"><img src="${window.location.protocol}//${window.location.host}/opg/images/streetview.png"></a>
                                         </td>  
                                         
                                     </tr>
@@ -1681,6 +1780,18 @@ async function infoFeaturesFASE1(e){
                                     </tr>
                                     
                                 `;
+
+                        
+                        console.log("pasa antes de cross in infofeatures")        
+                        var info_ae=await crossTablesFilterRPG(tabla,"ejes_actividad_poligonos","refcat='"+geojsonRES.features[r].properties.refcat+"'","fid>0")
+                        
+                        if(info_ae.features!=null){
+                            console.log("ejes_actividad=",info_ae.features[0].properties)
+                            htmlr=htmlr+`<tr align="center"  style='background-color:white;padding:3px;font-size:7.7pt;font-family:Arial Black;color:#660000;height:22px'>
+                                        
+                                        <td COLSPAN="2"><LABEL style='font-size:7.5pt;font-family:Arial Black;color:#db8200'>ENFRONT EIX D'ACTIVITAT ECONOMICA</td>                  
+                                    </tr>`
+                        }  
                     }
                     htmlr=htmlr+`</TABLE><br>`;
                     
