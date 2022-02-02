@@ -1,14 +1,56 @@
+async function findLayers(protocol_server,arrayTables,x,y) {
+
+  
+    array=arrayTables
+  
+    tabla=""
+  
+    arrayF=new Array()
+    
+    for(var p=0;p<array.length;p++){
+      
+     
+        tabla=array[p]
+        try{
+  
+          //let url = new URL("https://modeldeciutatgis-dev.palma.cat/opg/infoXY_FASE1");
+          let url = new URL(protocol_server+"/opg/findInLayer");
+          const params = {tabla: tabla, x: x, y: y};
+          Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
+          const dataRequest = {
+              method: 'GET'
+          };
+          var response = await fetch(url,dataRequest);
+        // console.log(response);
+         geojsonRES = await response.json(); 
+         //console.log(geojsonRES);
+  
+        if(geojsonRES==true) arrayF.push(tabla)
+      
+         
+        }catch( err ) {
+          console.log("Error en llamada cross="+err);
+        } 
+    
+    }
+  
+    return arrayF
+  }
+
+
 async function infoFeaturesFASE1(e){
 
     //  escribir acceso
 
-    urlA = new URL(window.location.protocol+'//'+window.location.host+"/opg/write_data_user_cross");
-    const params = {server:protocol_server,accion:"info_features_revision", latlng:e.latlng, lat:e.latlng.lat, lng:e.latlng.lng, x:x=e.latlng.utm().x, y:y=e.latlng.utm().y};
-        Object.keys(params).forEach(key => urlA.searchParams.append(key, params[key]));
-        const dataRequest = {
-            method: 'GET'
-        }; 
-    await fetch(urlA,dataRequest);
+    if(cross_server){
+        urlA = new URL(window.location.protocol+'//'+window.location.host+"/opg/write_data_user_cross");
+        const params = {server:protocol_server,accion:"info_features_revision", latlng:e.latlng, lat:e.latlng.lat, lng:e.latlng.lng, x:x=e.latlng.utm().x, y:y=e.latlng.utm().y};
+            Object.keys(params).forEach(key => urlA.searchParams.append(key, params[key]));
+            const dataRequest = {
+                method: 'GET'
+            }; 
+        await fetch(urlA,dataRequest);
+    }
 
     // end escribir acceso
    
@@ -17,7 +59,6 @@ async function infoFeaturesFASE1(e){
 
     var x=e.latlng.utm().x
     var y=e.latlng.utm().y
-    console.log(x+","+y);
           
     var arrayTablas = new Array(29); 
     arrayTablas[0]=["parcela_su_ru_calles"];
@@ -85,9 +126,9 @@ async function infoFeaturesFASE1(e){
     arrayTablas[25]=["campos_golf"];*/
 
    
-    // probar findTables
+    // probar findTables nodejs
     
-    let urlF = new URL(window.location.protocol+'//'+window.location.host+"/opg/findLayers");
+    /*let urlF = new URL(window.location.protocol+'//'+window.location.host+"/opg/findLayers");
     const paramsF = {server:window.location.protocol+'//'+window.location.host,arrayTables: arrayTablas, x: x, y: y};
     Object.keys(paramsF).forEach(keyF => urlF.searchParams.append(keyF, paramsF[keyF]));
     const dataRequestF = {
@@ -95,12 +136,18 @@ async function infoFeaturesFASE1(e){
     };
     var responseF = await fetch(urlF,dataRequestF); 
     var jsonTables = await responseF.json();
-    console.log(jsonTables)
+    console.log(jsonTables) */
+    //
+
+    // findTables browser
+
+    var responseF = await findLayers(window.location.protocol+'//'+window.location.host,arrayTablas,x,y)
+    var jsonTables = responseF
     //
    
     var tabla;
 
-    console.log("passsssssssssaaaaaaaaaaa");
+   
     
     var htmlr="";
     var html="";
@@ -108,24 +155,36 @@ async function infoFeaturesFASE1(e){
     for(var p=0;p<jsonTables.length;p++){
 
          tabla=jsonTables[p]; 
-         console.log("paix"+tabla);
+        
 
        // let url = new URL("http://"+serverPath+"/infoXY");
-        let url = new URL(window.location.protocol+'//'+window.location.host+"/opg/infoXY_FASE1_cross");
-        const params = {server:protocol_server,tabla: tabla, x: x, y: y};
-        Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
-        const dataRequest = {
-            method: 'GET'
-        };
-        var response = await fetch(url,dataRequest);
+        
+        response=null
+        if(cross_server){
+            let url = new URL(window.location.protocol+'//'+window.location.host+"/opg/infoXY_FASE1_cross");
+            const params = {server:protocol_server,tabla: tabla, x: x, y: y};
+            Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
+            const dataRequest = {
+                method: 'GET'
+            };
+            response = await fetch(url,dataRequest);
+        }else{
+            let url = new URL(window.location.protocol+'//'+window.location.host+"/opg/infoXY_FASE1");
+            const params = {tabla: tabla, x: x, y: y};
+            Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
+            const dataRequest = {
+                method: 'GET'
+            };
+            response = await fetch(url,dataRequest);
+        }
+        
         // console.log(response);
-        var geojsonRES = await response.json();
+        geojsonRES = await response.json();
        
       
         try{
             
-            // console.log(tabla);
-            console.log(geojsonRES.features);
+         
 
             if(geojsonRES.features.length>0) 
                  
@@ -1782,16 +1841,17 @@ async function infoFeaturesFASE1(e){
                                 `;
 
                         
-                        console.log("pasa antes de cross in infofeatures")        
-                        var info_ae=await crossTablesFilterRPG(tabla,"ejes_actividad_poligonos","refcat='"+geojsonRES.features[r].properties.refcat+"'","fid>0")
-                        
-                        if(info_ae.features!=null){
-                            console.log("ejes_actividad=",info_ae.features[0].properties)
-                            htmlr=htmlr+`<tr align="center"  style='background-color:white;padding:3px;font-size:7.7pt;font-family:Arial Black;color:#660000;height:22px'>
-                                        
-                                        <td COLSPAN="2"><LABEL style='font-size:7.5pt;font-family:Arial Black;color:#db8200'>ENFRONT EIX D'ACTIVITAT ECONOMICA</td>                  
-                                    </tr>`
-                        }  
+                        if(cross_server){      
+                            var info_ae=await crossTablesFilterRPG(tabla,"ejes_actividad_poligonos","refcat='"+geojsonRES.features[r].properties.refcat+"'","fid>0")
+                            
+                            if(info_ae.features!=null){
+                                console.log("ejes_actividad=",info_ae.features[0].properties)
+                                htmlr=htmlr+`<tr align="center"  style='background-color:white;padding:3px;font-size:7.7pt;font-family:Arial Black;color:#660000;height:22px'>
+                                            
+                                            <td COLSPAN="2"><LABEL style='font-size:7.5pt;font-family:Arial Black;color:#db8200'>ENFRONT EIX D'ACTIVITAT ECONOMICA</td>                  
+                                        </tr>`
+                            } 
+                        }
                     }
                     htmlr=htmlr+`</TABLE><br>`;
                     

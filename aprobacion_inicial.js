@@ -1,19 +1,31 @@
 function aprobacion_inicial(){
    
-       
+        cross_server=false
         protocol_server="https://modeldeciutatgis-dev.palma.cat"
         //protocol_server="http://vscenegis.hopto.org"
         
 
          //  escribir acceso
-        var urlA = new URL(window.location.protocol+'//'+window.location.host+"/opg/write_data_user_cross");
-        const paramsA = {server:protocol_server, accion:"acceso_revision"};
-        Object.keys(paramsA).forEach(keyA => urlA.searchParams.append(keyA, paramsA[keyA]));
-        const dataRequestA = {
-            method: 'GET',
-           
-        }; 
-        fetch(urlA,dataRequestA);
+        if(cross_server){
+            var urlA = new URL(window.location.protocol+'//'+window.location.host+"/opg/write_data_user_cross");
+            const paramsA = {server:protocol_server, accion:"acceso_revision"};
+            Object.keys(paramsA).forEach(keyA => urlA.searchParams.append(keyA, paramsA[keyA]));
+            const dataRequestA = {
+                method: 'GET',
+            
+            }; 
+            fetch(urlA,dataRequestA);
+        }else{
+            var urlA = new URL(window.location.protocol+'//'+window.location.host+"/opg/write_data_user");
+            const paramsA = {accion:"acceso_revision"};
+            Object.keys(paramsA).forEach(keyA => urlA.searchParams.append(keyA, paramsA[keyA]));
+            const dataRequestA = {
+                method: 'GET',
+            
+            }; 
+            fetch(urlA,dataRequestA);
+
+        }
 
         var popup = L.popup();
 
@@ -1016,14 +1028,26 @@ function aprobacion_inicial(){
 
             // ver si esta en centro historico o fuera
 
-            let url1 = new URL(window.location.protocol+'//'+window.location.host+"/opg/infoXY_FASE1_cross");
-            const params1 = {server: protocol_server, tabla: "centro_historico", x: x, y: y};
-            Object.keys(params1).forEach(key1 => url1.searchParams.append(key1, params1[key1]));
-            const dataRequest1 = {
-                method: 'GET',
-              
-            };
-            var response1 = await fetch(url1,dataRequest1);
+            response1=null
+            if(cross_server){
+                let url1 = new URL(window.location.protocol+'//'+window.location.host+"/opg/infoXY_FASE1_cross");
+                const params1 = {server: protocol_server, tabla: "centro_historico", x: x, y: y};
+                Object.keys(params1).forEach(key1 => url1.searchParams.append(key1, params1[key1]));
+                const dataRequest1 = {
+                    method: 'GET',
+                
+                };
+                response1 = await fetch(url1,dataRequest1);
+            }else{
+                let url1 = new URL(window.location.protocol+'//'+window.location.host+"/opg/infoXY_FASE1");
+                const params1 = {tabla: "centro_historico", x: x, y: y};
+                Object.keys(params1).forEach(key1 => url1.searchParams.append(key1, params1[key1]));
+                const dataRequest1 = {
+                    method: 'GET',
+                
+                };
+                response1 = await fetch(url1,dataRequest1);
+            }
             // console.log(response);
             var geojsonRES1 = await response1.json();
 
@@ -1033,15 +1057,28 @@ function aprobacion_inicial(){
                 tabla="hojas500ch" 
 
             // encontrar hoja
+            response=null
+            if(cross_server){
+                let url = new URL(window.location.protocol+'//'+window.location.host+"/opg/infoXY_FASE1_cross");
+                const params = {server: protocol_server, tabla: tabla, x: x, y: y};
+                Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
+                const dataRequest = {
+                    method: 'GET',
+                
+                };
+                response = await fetch(url,dataRequest);
+            }else{
+                let url = new URL(window.location.protocol+'//'+window.location.host+"/opg/infoXY_FASE1");
+                const params = {tabla: tabla, x: x, y: y};
+                Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
+                const dataRequest = {
+                    method: 'GET',
+                
+                };
+                response = await fetch(url,dataRequest);
 
-            let url = new URL(window.location.protocol+'//'+window.location.host+"/opg/infoXY_FASE1_cross");
-            const params = {server: protocol_server, tabla: tabla, x: x, y: y};
-            Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
-            const dataRequest = {
-                method: 'GET',
-              
-            };
-            var response = await fetch(url,dataRequest);
+            }
+            
             // console.log(response);
             var geojsonRES = await response.json();
             console.log(geojsonRES.features[0].properties.hojasCordenadas)
@@ -1061,19 +1098,26 @@ function aprobacion_inicial(){
 
             // ver si esta en centro historico o fuera
 
-            let url1 = new URL(window.location.protocol+'//'+window.location.host+"/opg/infoXY_FASE1_cross");
-            const params1 = {server: protocol_server, tabla: "hojas1000", x: x, y: y};
-            Object.keys(params1).forEach(key1 => url1.searchParams.append(key1, params1[key1]));
-            const dataRequest1 = {
-                method: 'GET',
-             
-                headers: {
-                    'Content-Type': 'application/json'
-                    // 'Content-Type': 'application/x-www-form-urlencoded',
-                  }
-            };
-            var response1 = await fetch(url1,dataRequest1);
-             console.log(response1);
+            response1=null
+            if(cross_server){
+                let url1 = new URL(window.location.protocol+'//'+window.location.host+"/opg/infoXY_FASE1_cross");
+                const params1 = {server: protocol_server, tabla: "hojas1000", x: x, y: y};
+                Object.keys(params1).forEach(key1 => url1.searchParams.append(key1, params1[key1]));
+                const dataRequest1 = {
+                    method: 'GET',
+                };
+                response1 = await fetch(url1,dataRequest1);
+            }else{
+                let url1 = new URL(window.location.protocol+'//'+window.location.host+"/opg/infoXY_FASE1");
+                const params1 = {tabla: "hojas1000", x: x, y: y};
+                Object.keys(params1).forEach(key1 => url1.searchParams.append(key1, params1[key1]));
+                const dataRequest1 = {
+                    method: 'GET',
+                };
+                response1 = await fetch(url1,dataRequest1);
+
+            }
+            
             var geojsonRES1 = await response1.json();
            
 
