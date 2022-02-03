@@ -1868,7 +1868,7 @@ async function infoFeaturesFASE1(e){
                                 `;
 
                         
-                        /*if(cross_server){      
+                             
                             var info_ae=await crossTablesFilterRPG(tabla,"ejes_actividad_poligonos","refcat='"+geojsonRES.features[r].properties.refcat+"'","fid>0")
                             
                             if(info_ae.features!=null){
@@ -1878,7 +1878,7 @@ async function infoFeaturesFASE1(e){
                                             <td COLSPAN="2"><LABEL style='font-size:7.5pt;font-family:Arial Black;color:#db8200'>ENFRONT EIX D'ACTIVITAT ECONOMICA</td>                  
                                         </tr>`
                             } 
-                        } */
+                        
                     }
                     htmlr=htmlr+`</TABLE><br>`;
                     
