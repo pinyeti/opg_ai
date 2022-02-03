@@ -59,13 +59,24 @@ async function normativa_revision(tabla,fid){
         //console.log(response2);
         info_geojson2 = await response2.json(); */
 
-        let url = new URL(window.location.protocol+'//'+window.location.host+"/opg/select_query_rpg_cross");
-        const params2 = {server: window.location.protocol+'//'+window.location.host, select: "select fid from "+tableName+" where ("+filtroSQL+")"};
-        Object.keys(params2).forEach(key => url.searchParams.append(key, params2[key]));
-        const dataRequest2 = {
-            method: 'GET'
-        };
-        let response2 = await fetch(url,dataRequest2);
+        response2=null
+        if(cross_server){
+            let url = new URL(window.location.protocol+'//'+window.location.host+"/opg/select_query_rpg_cross");
+            const params2 = {server: protocol_server, select: "select fid from "+tableName+" where ("+filtroSQL+")"};
+            Object.keys(params2).forEach(key => url.searchParams.append(key, params2[key]));
+            const dataRequest2 = {
+                method: 'GET'
+            };
+            response2 = await fetch(url,dataRequest2);
+        }else{
+            let url = new URL(window.location.protocol+'//'+window.location.host+"/opg/select_query_rpg");
+            const params2 = {select: "select fid from "+tableName+" where ("+filtroSQL+")"};
+            Object.keys(params2).forEach(key => url.searchParams.append(key, params2[key]));
+            const dataRequest2 = {
+                method: 'GET'
+            };
+            response2 = await fetch(url,dataRequest2);
+        }
         let info_geojson2 = await response2.json();
 
         //info_geojson2= await readDataFeatureRPG(tableName,filtroSQL);
@@ -125,13 +136,24 @@ async function normativa_revision(tabla,fid){
         //console.log(response2);
         let info_geojson2 = await response2.json();*/
 
-        let url = new URL(window.location.protocol+'//'+window.location.host+"/opg/select_query_rpg_cross");
-        const params2 = {server: window.location.protocol+'//'+window.location.host, select: "select fid from "+tableName+" where ("+filtroSQL+")"};
-        Object.keys(params2).forEach(key => url.searchParams.append(key, params2[key]));
-        const dataRequest2 = {
-            method: 'GET'
-        };
-        let response2 = await fetch(url,dataRequest2);
+        response2=null
+        if(cross_server){
+            let url = new URL(window.location.protocol+'//'+window.location.host+"/opg/select_query_rpg_cross");
+            const params2 = {server: protocol_server, select: "select fid from "+tableName+" where ("+filtroSQL+")"};
+            Object.keys(params2).forEach(key => url.searchParams.append(key, params2[key]));
+            const dataRequest2 = {
+                method: 'GET'
+            };
+            response2 = await fetch(url,dataRequest2);
+        }else{
+            let url = new URL(window.location.protocol+'//'+window.location.host+"/opg/select_query_rpg");
+            const params2 = {select: "select fid from "+tableName+" where ("+filtroSQL+")"};
+            Object.keys(params2).forEach(key => url.searchParams.append(key, params2[key]));
+            const dataRequest2 = {
+                method: 'GET'
+            };
+            response2 = await fetch(url,dataRequest2);
+        }
         let info_geojson2 = await response2.json();
         
 

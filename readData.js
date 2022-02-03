@@ -17,13 +17,24 @@ async function readDataFeature(tableSource,filtroSQL){
 
 async function readDataFeatureRPG(tableSource,filtroSQL){
           
-    let url = new URL(window.location.protocol+'//'+window.location.host+"/opg/infoquery_fase1_cross");
-    const params = {server: protocol_server, tabla: tableSource, filtro: filtroSQL};
-    Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
-    const dataRequest = {
-        method: 'GET'
-    };
-    var response = await fetch(url,dataRequest);
+    response=null
+    if(cross_server){
+        let url = new URL(window.location.protocol+'//'+window.location.host+"/opg/infoquery_fase1_cross");
+        const params = {server: protocol_server, tabla: tableSource, filtro: filtroSQL};
+        Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
+        const dataRequest = {
+            method: 'GET'
+        };
+        response = await fetch(url,dataRequest);
+    }else{
+        let url = new URL(window.location.protocol+'//'+window.location.host+"/opg/infoquery_fase1");
+        const params = {tabla: tableSource, filtro: filtroSQL};
+        Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
+        const dataRequest = {
+            method: 'GET'
+        };
+        response = await fetch(url,dataRequest);
+    }
     var info_geojson = await response.json();
     console.log("pasa");
 
@@ -98,13 +109,26 @@ async function crossTablesFilterRPG(tableSource,tableTarget,filtroSource,filtroT
     //let url = new URL(window.location.protocol+'//'+window.location.host+"/opg/intersectionFilter_rpg");
     //const params = {tablaSOURCE: tableSource, tablaTARGET: tableTarget, filtroSOURCE: filtroSource,filtroTARGET: filtroTarget};
     console.log("va a leer crossfilter")
-    let url = new URL(window.location.protocol+'//'+window.location.host+"/opg/intersectionFilter_rpg_cross");
-    const params = {server:protocol_server,tablaSOURCE: tableSource, tablaTARGET: tableTarget, filtroSOURCE: filtroSource,filtroTARGET: filtroTarget};
-    Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
-    const dataRequest = {
-        method: 'GET'
-    };
-    var response = await fetch(url,dataRequest);
+
+    response=null
+    if(cross_server){
+        let url = new URL(window.location.protocol+'//'+window.location.host+"/opg/intersectionFilter_rpg_cross");
+        const params = {server:protocol_server,tablaSOURCE: tableSource, tablaTARGET: tableTarget, filtroSOURCE: filtroSource,filtroTARGET: filtroTarget};
+        Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
+        const dataRequest = {
+            method: 'GET'
+        };
+        response = await fetch(url,dataRequest);
+    }else{
+        let url = new URL(window.location.protocol+'//'+window.location.host+"/opg/intersectionFilter_rpg");
+        const params = {tablaSOURCE: tableSource, tablaTARGET: tableTarget, filtroSOURCE: filtroSource,filtroTARGET: filtroTarget};
+        Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
+        const dataRequest = {
+            method: 'GET'
+        };
+        response = await fetch(url,dataRequest);
+
+    }
    // console.log(response);
     var info_geojson = await response.json();
    // console.log("res="+info_geojson.features[0].properties.codigo);

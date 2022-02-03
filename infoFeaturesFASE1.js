@@ -50,6 +50,14 @@ async function infoFeaturesFASE1(e){
                 method: 'GET'
             }; 
         await fetch(urlA,dataRequest);
+    }else{
+        urlA = new URL(window.location.protocol+'//'+window.location.host+"/opg/write_data_user");
+        const params = {accion:"info_features_revision", latlng:e.latlng, lat:e.latlng.lat, lng:e.latlng.lng, x:x=e.latlng.utm().x, y:y=e.latlng.utm().y};
+            Object.keys(params).forEach(key => urlA.searchParams.append(key, params[key]));
+            const dataRequest = {
+                method: 'GET'
+            }; 
+        await fetch(urlA,dataRequest);
     }
 
     // end escribir acceso
@@ -141,8 +149,27 @@ async function infoFeaturesFASE1(e){
 
     // findTables browser
 
-    var responseF = await findLayers(window.location.protocol+'//'+window.location.host,arrayTablas,x,y)
-    var jsonTables = responseF
+    responseF=null
+    jsonTables=null
+    if(cross_server){
+        let urlF = new URL(window.location.protocol+'//'+window.location.host+"/opg/findLayers");
+        const paramsF = {server:protocol_server,arrayTables: arrayTablas, x: x, y: y};
+        Object.keys(paramsF).forEach(keyF => urlF.searchParams.append(keyF, paramsF[keyF]));
+        const dataRequestF = {
+            method: 'GET'
+        };
+        responseF = await fetch(urlF,dataRequestF); 
+        jsonTables = await responseF.json();
+        
+    }else{
+        responseF = await findLayers(window.location.protocol+'//'+window.location.host,arrayTablas,x,y)
+        jsonTables = responseF
+    }
+
+    
+
+    console.log("josontables",jsonTables)
+    console.log("josontables length",jsonTables.length)
     //
    
     var tabla;
@@ -1841,7 +1868,7 @@ async function infoFeaturesFASE1(e){
                                 `;
 
                         
-                        if(cross_server){      
+                        /*if(cross_server){      
                             var info_ae=await crossTablesFilterRPG(tabla,"ejes_actividad_poligonos","refcat='"+geojsonRES.features[r].properties.refcat+"'","fid>0")
                             
                             if(info_ae.features!=null){
@@ -1851,7 +1878,7 @@ async function infoFeaturesFASE1(e){
                                             <td COLSPAN="2"><LABEL style='font-size:7.5pt;font-family:Arial Black;color:#db8200'>ENFRONT EIX D'ACTIVITAT ECONOMICA</td>                  
                                         </tr>`
                             } 
-                        }
+                        } */
                     }
                     htmlr=htmlr+`</TABLE><br>`;
                     
