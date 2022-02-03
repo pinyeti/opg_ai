@@ -4,13 +4,23 @@ async function normativa_revision(tabla,fid){
 
     map.spin(true);
 
-    urlA = new URL(window.location.protocol+'//'+window.location.host+"/opg/write_data_user_cross");
-    const paramsA = {server:protocol_server,accion:"articulos_revision:"+tabla};
-    Object.keys(paramsA).forEach(key => urlA.searchParams.append(key, paramsA[key]));
-    const dataRequestA = {
-        method: 'GET'
-    }; 
-    await fetch(urlA,dataRequestA);
+    if(cross_server){
+        urlA = new URL(window.location.protocol+'//'+window.location.host+"/opg/write_data_user_cross");
+        const paramsA = {server:protocol_server,accion:"articulos_revision:"+tabla};
+        Object.keys(paramsA).forEach(key => urlA.searchParams.append(key, paramsA[key]));
+        const dataRequestA = {
+            method: 'GET'
+        }; 
+        await fetch(urlA,dataRequestA);
+    }else{
+        urlA = new URL(window.location.protocol+'//'+window.location.host+"/opg/write_data_user");
+        const paramsA = {accion:"articulos_revision:"+tabla};
+        Object.keys(paramsA).forEach(key => urlA.searchParams.append(key, paramsA[key]));
+        const dataRequestA = {
+            method: 'GET'
+        }; 
+        await fetch(urlA,dataRequestA);
+    }
 
     //console.log("tabla="+tabla+","+fid);
 
