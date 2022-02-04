@@ -1,7 +1,7 @@
 function aprobacion_inicial(){
    
         cross_server=false
-        protocol_server="https://modeldeciutatgis-dev.palma.cat"
+        protocol_server="https://modeldeciutatgis.palma.cat"
         //protocol_server="http://vscenegis.hopto.org"
         
 

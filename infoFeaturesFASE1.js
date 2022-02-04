@@ -1025,7 +1025,7 @@ async function infoFeaturesFASE1(e){
 
                     for(var r=0;r<geojsonRES.features.length;r++){   
 
-                        var ruta=window.location.protocol+'//'+window.location.host+"/images/guia_expedientes/Images Arxiu/"+
+                        var ruta=protocol_server+"/images/guia_expedientes/Images Arxiu/"+
                                   geojsonRES.features[r].properties.ruta_exp
 
                         var datoRuta=`<td align="center"><a href="${ruta}"  target="_blank" title="Informació del instrument de desenvolupament" style='color:blue;font-family:Arial;font-size:8.5pt'>${geojsonRES.features[r].properties.regulacion}</a></td>`                  
@@ -1617,7 +1617,7 @@ async function infoFeaturesFASE1(e){
                         if(r>0) htmlr=htmlr+` <tr style='height:2px'>                 
                                         </tr>`;
 
-                        var ruta="http://vscenegis.hopto.org/images/planoguia/Images Arxiu/PB-PLA_ESPECIAL/PB-"+
+                        var ruta=protocol_server+"/images/planoguia/Images Arxiu/PB-PLA_ESPECIAL/PB-"+
                                   geojsonRES.features[r].properties.codigo+"/PB-"+
                                  geojsonRES.features[r].properties.codigo+"_PORTADA.pdf";     
                                  
@@ -1675,7 +1675,7 @@ async function infoFeaturesFASE1(e){
                         if(r>0) htmlr=htmlr+` <tr style='height:2px'>                 
                                         </tr>`;
 
-                        var ruta="http://vscenegis.hopto.org/images/planoguia/Images Arxiu/PBX_PERIS/PBX-"+
+                        var ruta=protocol_server+"/images/planoguia/Images Arxiu/PBX_PERIS/PBX-"+
                             geojsonRES.features[r].properties.codigo+"/PBX-"+
                             geojsonRES.features[r].properties.codigo+"_PORTADA.pdf";   
                                  
@@ -1731,7 +1731,7 @@ async function infoFeaturesFASE1(e){
                         if(r>0) htmlr=htmlr+` <tr style='height:2px'>                 
                                         </tr>`;
 
-                        var ruta="http://vscenegis.hopto.org/images/planoguia/Images Arxiu/PC-PLA_PARCIAL/PC-"+
+                        var ruta=protocol_server+"/images/planoguia/Images Arxiu/PC-PLA_PARCIAL/PC-"+
                         //var ruta="http://vscenegis.hopto.org/joomla/images/sampledata/planoguia/Images Arxiu/PC-PLA_PARCIAL/PC-"+
                                   geojsonRES.features[r].properties.codigo+"/PC-"+
                                  geojsonRES.features[r].properties.codigo+"_PORTADA.pdf";        
@@ -1790,7 +1790,7 @@ async function infoFeaturesFASE1(e){
                         if(r>0) htmlr=htmlr+` <tr style='height:2px'>                 
                                         </tr>`;
 
-                         var ruta="http://vscenegis.hopto.org/images/planoguia/Images Arxiu/PE-ESTUDI_DETALL/PE-"+
+                         var ruta=protocol_server+"/images/planoguia/Images Arxiu/PE-ESTUDI_DETALL/PE-"+
                                   geojsonRES.features[r].properties.codigo+"/PE-"+
                                  geojsonRES.features[r].properties.codigo+"_PORTADA.pdf";    
                                  
